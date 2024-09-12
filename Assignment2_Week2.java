@@ -1,7 +1,7 @@
 /***
- * Task: A java program that can perform task such as  CountPalindromes, NthFibonacci, SnakeToCamel 
+ * Task: A java program to perform CountPalindromes, NthFibonacci, SnakeToCamel, CountConsonants and BinaryToDecimal operation on string.
  * Owner: Uddeshya Patidar
- * Date: 11/09/2024
+ * Date: 12/09/2024
  */
 
 package practice.java;
@@ -21,75 +21,102 @@ public class Assignment2_Week2 {
         boolean continueRunning = true;
 
         while (continueRunning) {
-            System.out.println("Choose a task:");
-            System.out.println("1. Find unique palindromic substrings");
-            System.out.println("2. Calculate Fibonacci number");
-            System.out.println("3. Convert string to camelCase");
-            System.out.print("Enter the task number (1, 2, or 3): ");
-            int task = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline
+            int task = 0;
+            boolean validTask = false;
 
-            if (task == 1) {
-                // Palindrome Substrings Part
-                System.out.println("Please enter a String: ");
-                String input = scanner.nextLine();
-                String dataString = inputToString(input);
+            // Ask user to select a task number and handle invalid input
+            while (!validTask) {
+                System.out.println("Choose a task:");
+                System.out.println("1. Find unique palindromic substrings");
+                System.out.println("2. Calculate Fibonacci number");
+                System.out.println("3. Convert string to snake_case and camelCase");
+                System.out.println("4. Count consonants in a string");
+                System.out.println("5. Convert binary to decimal");
+                System.out.print("Enter the task number (1, 2, 3, 4, or 5): ");
 
-                // Remove spaces from the string
-                dataString = dataString.replaceAll("\\s+", "");
-
-                if (isValidInput(dataString)) {
-                    System.out.println("All possible palindromic combinations are:");
-                    HashSet<String> palindromeSet = new HashSet<>();
-                    findPalindromicSubstrings(dataString, 0, 1, palindromeSet);
-                    for (String palindrome : palindromeSet) {
-                        System.out.println(palindrome);
+                try {
+                    task = scanner.nextInt();
+                    scanner.nextLine(); 
+                    if (task < 1 || task > 5) {
+                        System.out.println("Invalid task number. Please enter 1, 2, 3, 4, or 5.");
+                    } else {
+                        validTask = true; // Valid task number entered
                     }
-                    System.out.println("Total number of palindromic combination found: " + palindromeSet.size());
-                } else {
-                    System.out.println("Invalid input. Please enter a non-empty string with alphabetic characters only.");
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a number between 1 and 5.");
+                    scanner.next(); 
                 }
-
-            } else if (task == 2) {
-            
-                System.out.println("\nEnter the position (n) in the Fibonacci series: ");
-                
-                BigInteger n = null;
-                boolean validInput = false;
-
-                while (!validInput) {
-                    try {
-                        n = scanner.nextBigInteger();
-                        scanner.nextLine();
-                        if (n.compareTo(BigInteger.ZERO) < 0) {
-                            System.out.println("Invalid input. Please enter a non-negative integer.");
-                        } else {
-                            validInput = true; // Valid input, exit loop
-                        }
-                    } catch (InputMismatchException e) {
-                        System.out.println("Invalid input. Please enter a valid integer.");
-                        scanner.next(); 
-                    }
-                }
-
-                if (validInput) {
-                    BigInteger result = fibonacci(n);
-                    System.out.println("The " + n + "th number in the Fibonacci series is: " + result);
-                }
-
-            } else if (task == 3) {
-                System.out.println("Please enter a string to convert to camelCase: ");
-                String input = scanner.nextLine();
-                String camelCaseString = toCamelCase(input);
-                System.out.println("CamelCase form: " + camelCaseString);
-
-            } else {
-                System.out.println("Invalid task number. Please enter 1, 2, or 3.");
             }
 
-            System.out.print("\nDo you want to run the program again? (yes/no): ");
+            // Perform the selected task
+            switch (task) {
+                case 1:
+                    // Task 1: Palindrome Substrings Part
+                    System.out.println("Please enter a String for palindrome detection: ");
+                    String input = scanner.nextLine();
+                    String dataString = inputToString(input);
+
+                    // Remove spaces from the string
+                    dataString = dataString.replaceAll("\\s+", "");
+
+                    if (isValidInput(dataString)) {
+                        System.out.println("Unique palindromic substrings are:");
+                        HashSet<String> palindromeSet = new HashSet<>();
+                        findPalindromicSubstrings(dataString, 0, 1, palindromeSet);
+                        for (String palindrome : palindromeSet) {
+                            System.out.println(palindrome);
+                        }
+                        System.out.println("Total number of unique palindromic Combination found: " + palindromeSet.size());
+                    } else {
+                        System.out.println("Invalid input. Please enter a non-empty string with alphabetic characters only");
+                    }
+                    break;
+
+                case 2:
+                    // Task 2: Fibonacci Part
+                    printNthFibonacci(scanner);
+                    break;
+
+                case 3:
+                    // Task 3: Convert to snake_case and camelCase
+                    System.out.println("Please enter a string to convert to camelCase: ");
+                    String inputStr = scanner.nextLine();
+
+                    // Convert to snake_case
+                    String snakeCaseString = toSnakeCase(inputStr.trim());
+                    System.out.println("snake_case form: " + snakeCaseString);
+
+                    // Convert to camelCase
+                    String camelCaseString = toCamelCase(snakeCaseString);
+                    System.out.println("camelCase form: " + camelCaseString);
+                    break;
+
+                case 4:
+                    // Task 4: Count Consonants Part
+                    System.out.println("Please enter a string to count consonants: ");
+                    String consonantInput = scanner.nextLine();
+                    int consonantCount = countConsonantsRecursive(consonantInput, 0);
+                    System.out.println("Total number of consonants found: " + consonantCount);
+                    break;
+
+                case 5:
+                    // Task 5: Convert Binary to Decimal
+                    System.out.println("Please enter a binary number: ");
+                    String binaryInput = scanner.nextLine();
+
+                    if (isBinary(binaryInput)) {
+                        BigInteger decimalValue = binaryToDecimalRecursive(binaryInput, binaryInput.length() - 1, BigInteger.ZERO, BigInteger.ONE);
+                        System.out.println("The decimal equivalent of binary " + binaryInput + " is: " + decimalValue);
+                    } else {
+                        System.out.println("Invalid input. Please enter a valid binary number.");
+                    }
+                    break;
+            }
+
+            // Ask if the user wants to run the program again
+            System.out.print("\nDo you want to run the program again? (y/n): ");
             String response = scanner.nextLine().trim().toLowerCase();
-            if (!response.equals("yes")) {
+            if (!response.equals("y")) {
                 continueRunning = false;
             }
         }
@@ -116,15 +143,15 @@ public class Assignment2_Week2 {
     // Recursive method to generate and check palindromic substrings
     public static void findPalindromicSubstrings(String str, int start, int end, HashSet<String> palindromeSet) {
         if (start >= str.length()) {
-            return; 
+            return;
         }
         if (end > str.length()) {
-            findPalindromicSubstrings(str, start + 1, start + 2, palindromeSet); 
+            findPalindromicSubstrings(str, start + 1, start + 2, palindromeSet);
             return;
         }
         String substring = str.substring(start, end);
         if (isPalindrome(substring)) {
-            palindromeSet.add(substring); 
+            palindromeSet.add(substring);
         }
         findPalindromicSubstrings(str, start, end + 1, palindromeSet);
     }
@@ -134,59 +161,125 @@ public class Assignment2_Week2 {
         return isPalindromeHelper(str, 0, str.length() - 1);
     }
 
-    // check palindrome
     public static boolean isPalindromeHelper(String str, int start, int end) {
         if (start >= end) {
-            return true; 
+            return true;
         }
         if (str.charAt(start) != str.charAt(end)) {
-            return false; // Characters don't match, not a palindrome
+            return false;
         }
         return isPalindromeHelper(str, start + 1, end - 1);
     }
 
-   
+    // Validate input
     public static boolean isValidInput(String str) {
         return !str.isEmpty() && isAlphabetic(str);
     }
+
     public static boolean isAlphabetic(String str) {
         return isAlphabeticHelper(str, 0);
     }
 
     public static boolean isAlphabeticHelper(String str, int index) {
         if (index >= str.length()) {
-            return true; 
+            return true;
         }
         if (!Character.isLetter(str.charAt(index))) {
             return false;
         }
-        return isAlphabeticHelper(str, index + 1); 
+        return isAlphabeticHelper(str, index + 1);
     }
 
-    public static BigInteger fibonacci(BigInteger n) {
-        if (n.equals(BigInteger.ZERO)) {
-            return BigInteger.ZERO; 
-        } else if (n.equals(BigInteger.ONE)) {
-            return BigInteger.ONE; 
-        } else {
-            return fibonacci(n.subtract(BigInteger.ONE)).add(fibonacci(n.subtract(BigInteger.TWO)));
+    // Recursive method to calculate the nth Fibonacci number using BigInteger
+    private static BigInteger nthIntegerHelper(int n, BigInteger a, BigInteger b) {
+        if (n == 0) {
+            return a;
         }
+        if (n == 1) {
+            return b;
+        }
+        return nthIntegerHelper(n - 1, b, a.add(b));  // Tail recursive call
+    }
+
+    private static BigInteger nthInteger(int input) {
+        return nthIntegerHelper(input, BigInteger.ZERO, BigInteger.ONE);
+    }
+
+    public static void printNthFibonacci(Scanner scanner) {
+        System.out.println("Enter a positive integer for Fibonacci sequence: ");
+        String input = scanner.nextLine();
+        int integerInput;
+        try {
+            integerInput = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid positive integer.");
+            return;
+        }
+        if (integerInput < 0 || integerInput > 10000) {
+            System.out.println("Please enter a positive integer between 0 and 10000.");
+        } else {
+            BigInteger result = nthInteger(integerInput);
+            System.out.println("The " + integerInput + "th Fibonacci number is: " + result);
+        }
+        System.out.println();
+    }
+
+    // Convert a string to snake_case
+    public static String toSnakeCase(String input) {
+        String snakeCase = input.trim().replaceAll("\\s+", "_").toLowerCase();
+        snakeCase = snakeCase.replaceAll("[^a-z0-9_]", "");
+        return snakeCase;
     }
 
     // Convert a string to camelCase
-    public static String toCamelCase(String str) {
-        String[] words = str.trim().split("[\\W_]+");
-        if (words.length == 0) {
-            return ""; 
+    public static String toCamelCase(String snakeCaseString) {
+        if (snakeCaseString == null || snakeCaseString.isEmpty()) {
+            return "";
         }
 
-        // Capitalize each word except the first one
-        StringBuilder camelCaseStr = new StringBuilder(words[0].toLowerCase());
-        for (int i = 1; i < words.length; i++) {
-            camelCaseStr.append(Character.toUpperCase(words[i].charAt(0)))
-                        .append(words[i].substring(1).toLowerCase());
+        String[] words = snakeCaseString.split("_");
+        StringBuilder camelCaseString = new StringBuilder();
+
+        for (int i = 0; i < words.length; i++) {
+            if (i == 0) {
+                camelCaseString.append(words[i].toLowerCase());
+            } else {
+                if (!words[i].isEmpty()) {
+                    camelCaseString.append(Character.toUpperCase(words[i].charAt(0)))
+                            .append(words[i].substring(1).toLowerCase());
+                }
+            }
+        }
+        return camelCaseString.toString();
+    }
+
+    // Count consonants recursively
+    public static int countConsonantsRecursive(String str, int index) {
+        if (index >= str.length()) {
+            return 0;
         }
 
-        return camelCaseStr.toString();
+        char ch = str.charAt(index);
+        if (Character.isLetter(ch) && !"AEIOUaeiou".contains(String.valueOf(ch))) {
+            return 1 + countConsonantsRecursive(str, index + 1);
+        } else {
+            return countConsonantsRecursive(str, index + 1);
+        }
+    }
+
+    // Check if the input string is a valid binary number
+    public static boolean isBinary(String str) {
+        return str.matches("[01]+");
+    }
+
+    // Recursive method to convert binary to decimal
+    public static BigInteger binaryToDecimalRecursive(String binaryInput, int index, BigInteger result, BigInteger powerOfTwo) {
+        if (index < 0) {
+            return result;
+        }
+        if (binaryInput.charAt(index) == '1') {
+            result = result.add(powerOfTwo);
+        }
+        return binaryToDecimalRecursive(binaryInput, index - 1, result, powerOfTwo.multiply(BigInteger.TWO));
     }
 }
