@@ -48,29 +48,35 @@ public class Assignment2_Week2 {
                 }
             }
 
-            // Perform the selected task
             switch (task) {
-                case 1:
-                    // Task 1: Palindrome Substrings Part
-                    System.out.println("Please enter a String for palindrome detection: ");
-                    String input = scanner.nextLine();
-                    String dataString = inputToString(input);
+            case 1:
+                // Task 1: Palindrome Substrings Part
+                System.out.println("Please enter a String for palindrome detection (max 100 characters): ");
+                String input = scanner.nextLine();
+                
+                // if input length exceeds 100 characters
+                if (input.length() > 100) {
+                    System.out.println("Input exceeds the maximum length of 100 characters.");
+                    break; 
+                }
+                
+                String dataString = inputToString(input);
 
-                    // Remove spaces from the string
-                    dataString = dataString.replaceAll("\\s+", "");
+                // Remove spaces from the string
+                dataString = dataString.replaceAll("\\s+", "");
 
-                    if (isValidInput(dataString)) {
-                        System.out.println("Unique palindromic substrings are:");
-                        HashSet<String> palindromeSet = new HashSet<>();
-                        findPalindromicSubstrings(dataString, 0, 1, palindromeSet);
-                        for (String palindrome : palindromeSet) {
-                            System.out.println(palindrome);
-                        }
-                        System.out.println("Total number of unique palindromic Combination found: " + palindromeSet.size());
-                    } else {
-                        System.out.println("Invalid input. Please enter a non-empty string with alphabetic characters only");
+                if (isValidInput(dataString)) {
+                    System.out.println("Unique palindromic substrings are:");
+                    HashSet<String> palindromeSet = new HashSet<>();
+                    findPalindromicSubstrings(dataString, 0, 1, palindromeSet);
+                    for (String palindrome : palindromeSet) {
+                        System.out.println(palindrome);
                     }
-                    break;
+                    System.out.println("Total number of unique palindromic Combination found: " + palindromeSet.size());
+                } else {
+                    System.out.println("Invalid input. Please enter a non-empty string with alphabetic characters only");
+                }
+                break;
 
                 case 2:
                     // Task 2: Fibonacci Part
@@ -80,16 +86,22 @@ public class Assignment2_Week2 {
                 case 3:
                     // Task 3: Convert to snake_case and camelCase
                     System.out.println("Please enter a string to convert to camelCase: ");
-                    String inputStr = scanner.nextLine();
+                    String inputString = scanner.nextLine();
+                    
+                    // if the string is already in camelCase
+                    if (isCamelCase(inputString)) {
+                        System.out.println("The string is already in camelCase: " + inputString);
+                    } else {
+                        // Convert to snake_case
+                        String snakeCaseString = toSnakeCase(inputString.trim());
+                        System.out.println("snake_case form: " + snakeCaseString);
 
-                    // Convert to snake_case
-                    String snakeCaseString = toSnakeCase(inputStr.trim());
-                    System.out.println("snake_case form: " + snakeCaseString);
-
-                    // Convert to camelCase
-                    String camelCaseString = toCamelCase(snakeCaseString);
-                    System.out.println("camelCase form: " + camelCaseString);
+                        // Convert to camelCase
+                        String camelCaseString = toCamelCase(snakeCaseString);
+                        System.out.println("camelCase form: " + camelCaseString);
+                    }
                     break;
+
 
                 case 4:
                     // Task 4: Count Consonants Part
@@ -252,6 +264,28 @@ public class Assignment2_Week2 {
         }
         return camelCaseString.toString();
     }
+ // Check if a string is in camelCase
+    public static boolean isCamelCase(String str) {
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        if (str.contains(" ") || str.contains("_")) {
+            return false;
+        }
+        if (!Character.isLowerCase(str.charAt(0))) {
+            return false;
+        }
+        boolean hasUpperCase = false;
+        for (char ch : str.toCharArray()) {
+            if (Character.isUpperCase(ch)) {
+                hasUpperCase = true;
+            } else if (hasUpperCase && Character.isLowerCase(ch)) {
+                // If an uppercase letter is followed by a lowercase letter, it's camelCase
+                return true;
+            }
+        }
+        return hasUpperCase;     }
+
 
     // Count consonants recursively
     public static int countConsonantsRecursive(String str, int index) {
